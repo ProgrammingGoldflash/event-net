@@ -1,3 +1,4 @@
+using AutoMapper;
 using Event.Net.Server.Data;
 using Event.Net.Server.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -23,6 +24,11 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSingleton(provider => new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<MapperProfile>();
+}).CreateMapper());
 
 var app = builder.Build();
 

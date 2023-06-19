@@ -8,7 +8,7 @@ namespace Event.Net.Server.Models
         public int Id { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] 
         public DateTime Created { get; set; }
         public int EventId { get; set; }
         public Event Event { get; set; }

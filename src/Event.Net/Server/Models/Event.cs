@@ -11,12 +11,10 @@ namespace Event.Net.Server.Models
         public DateTime EventDate { get; set; }
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime LastUpdated { get; set; }
-
+        public DateTime Created { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? LastUpdated { get; set; }
         public ICollection<Review> Reviews { get; set; }
     }
 }

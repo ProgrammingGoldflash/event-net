@@ -21,7 +21,7 @@ namespace Event.Net.Server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
             modelBuilder.Entity<Models.Review>()
                 .HasOne(e => e.Event)
                 .WithMany(e => e.Reviews)
@@ -48,6 +48,18 @@ namespace Event.Net.Server.Data
                 .WithMany(e => e.Reviews)
                 .HasForeignKey(e => e.UserId)
                 .HasPrincipalKey(e => e.Id);
+
+            modelBuilder.Entity<Review>()
+            .Property(s => s.Created)
+            .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Models.Event>()
+            .Property(s => s.Created)
+            .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Models.Event>()
+            .Property(s => s.LastUpdated)
+            .ValueGeneratedOnUpdate();
         }
     }
 }
