@@ -1,18 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider Theme="@theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+<MudLayout>
+    <MudAppBar Dense="true" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        eventNET
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Mini">
+        <MudNavMenu>
+            <MudNavLink Match="NavLinkMatch.All" Href="/events" Icon="@Icons.Material.Filled.Event">Events</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" Href="/saved" Icon="@Icons.Material.Filled.Bookmarks">Saved</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" Href="/reviews" Icon="@Icons.Material.Filled.Reviews">Reviews</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" Href="/account" Icon="@Icons.Material.Filled.AccountBox">Account</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer Class="mt-6">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = false;
+    private MudTheme theme = new MudTheme()
+    {
+        Palette = new PaletteLight()
+        {
+            Primary = Colors.Orange.Default
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = Colors.Orange.Default
+        }
+    };
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

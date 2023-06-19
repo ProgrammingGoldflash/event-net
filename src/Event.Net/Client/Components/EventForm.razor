@@ -1,0 +1,21 @@
+﻿<EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack Spacing="2">
+                        <MudTextField Label="Name" @bind-Value="Model.EventName" Required="true" Variant="Variant.Outlined" />
+                        <MudTextField Label="Description" @bind-Value="Model.Description" Lines="4" Required="true" Variant="Variant.Outlined" />
+                        <MudDatePicker Label="Date" @bind-Date="Date" Required="true" Variant="Variant.Outlined" />
+                    </MudStack>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                        @(EditMode ? "Save changes" : "Add event")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>

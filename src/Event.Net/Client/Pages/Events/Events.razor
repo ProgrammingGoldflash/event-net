@@ -1,0 +1,49 @@
+﻿@page "/events"
+@attribute [AllowAnonymous]
+@    using Event.Net.Shared;
+@inject IHttpClientFactory HttpFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MudStack Spacing="4">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+
+    <MudStack>
+        <MudLink Href="/events/new">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                Add a new event
+            </MudButton>
+        </MudLink>
+    </MudStack>
+
+    @if (events != null && events.Any())
+    {
+        <MudGrid Spacing="3" Justify="Justify.Center">
+            @foreach (var e in events)
+            {
+                <MudItem xs="6" md="3" lg="4">
+                    <MudPaper Class="pa-4">
+                        <MudStack>
+                            <MudStack Row="true">
+                                <h5>
+                                    @e.EventName - @e.EventDate.ToShortDateString()
+                                </h5>
+
+                                @if (userId == e.OrganizerId)
+                                {
+                                    <MudLink Href="@($"/events/edit/{e.EventId}")">
+                                        <MudButton Variant="Variant.Text" Color="Color.Primary">
+                                            Edit
+                                        </MudButton>
+                                    </MudLink>
+                                }
+                            </MudStack>
+                            <span>
+                                @e.Description
+                            </span>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+</MudStack>

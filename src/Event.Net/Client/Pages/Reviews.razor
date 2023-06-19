@@ -1,0 +1,26 @@
+﻿@page "/reviews"
+@using Event.Net.Shared;
+@inject HttpClient http
+
+<h3>Reviews</h3>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Events", href: "/events", icon: Icons.Material.Filled.Event)
+    };
+
+    private EventDto[]? events;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            events = await http.GetFromJsonAsync<EventDto[]>("api/events");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

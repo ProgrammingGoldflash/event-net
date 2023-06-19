@@ -1,0 +1,56 @@
+﻿@page "/events/edit/{Id:int}"
+@inject IHttpClientFactory HttpFactory
+@inject NavigationManager NavigationManager
+
+<MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+
+<Event.Net.Client.Components.EventForm Model="@model" OnValidSubmit="OnValidSubmit" EditMode="true" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Events", href: "/events", icon: Icons.Material.Filled.Event),
+        new BreadcrumbItem("Edit", href: $"/events", icon: Icons.Material.Filled.Edit)
+    };
+
+    private EventDto model = new EventDto();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            var http = HttpFactory.CreateClient(Constants.Api);
+
+            model = await http.GetFromJsonAsync<EventDto>($"api/events/{Id}");
+            StateHasChanged();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            if (context.Validate())
+            {
+                var http = HttpFactory.CreateClient(Constants.Api);
+
+                var res = await http.PutAsJsonAsync($"api/events/{Id}", model);
+                Console.WriteLine(res.StatusCode);
+
+                res.EnsureSuccessStatusCode();
+
+                NavigationManager.NavigateTo("/events");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}
