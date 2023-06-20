@@ -13,18 +13,19 @@ namespace Event.Net.Client.Components
         protected override void OnParametersSet()
         {
             if (Model != null && EditMode is true)
-                date = Model.EventDate;
-        }
-
-        private DateTime? date;
-        private DateTime? Date
-        {
-            get => date;
-            set
             {
-                Model.EventDate = value.Value;
-                date = value;
+                Date = Model.EventDate;
+                Time = Model.EventDate.TimeOfDay;
             }
         }
+
+        private async Task Submit(EditContext editContext)
+        {
+            Model.EventDate = Date.Value.Date + Time.Value;
+            await OnValidSubmit.InvokeAsync(editContext);
+        }
+
+        private DateTime? Date { get; set; }
+        private TimeSpan? Time { get; set; }
     }
 }

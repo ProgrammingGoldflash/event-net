@@ -1,4 +1,4 @@
-﻿<EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
     <DataAnnotationsValidator />
     <MudGrid>
         <MudItem xs="12">
@@ -7,7 +7,10 @@
                     <MudStack Spacing="2">
                         <MudTextField Label="Name" @bind-Value="Model.EventName" Required="true" Variant="Variant.Outlined" />
                         <MudTextField Label="Description" @bind-Value="Model.Description" Lines="4" Required="true" Variant="Variant.Outlined" />
-                        <MudDatePicker Label="Date" @bind-Date="Date" Required="true" Variant="Variant.Outlined" />
+                        <MudStack Row="true">
+                            <MudDatePicker Label="Date" @bind-Date="Date" Required="true" Variant="Variant.Outlined" />
+                            <MudTimePicker Label="Time" @bind-Time="Time" Required="true" Variant="Variant.Outlined" />
+                        </MudStack>
                     </MudStack>
                 </MudCardContent>
                 <MudCardActions>

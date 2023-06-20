@@ -1,0 +1,108 @@
+﻿@page "/events/{Id:int}"
+
+<MudGrid Spacing="2">
+    <MudItem xs="12">
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Class="pa-4">
+            <MudStack Spacing="2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudText Typo="Typo.h3" Class="mr-4">
+                        @model.EventName
+                    </MudText>
+                    @if (currentUserId == model.OrganizerId)
+                    {
+                        <MudLink Href="@($"/events/edit/{model.EventId}")">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                        </MudLink>
+
+                        <MudIconButton OnClick="@DeleteEvent" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                    }
+                </MudStack>
+
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Primary" />
+                    <MudText Typo="Typo.subtitle1">
+                        <b>@model.EventDate.ToShortDateString()</b>
+                    </MudText>
+                </MudStack>
+                
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudIcon Icon="@Icons.Material.Filled.AccessTime" Color="Color.Primary"/>
+                    <MudText Typo="Typo.subtitle1">
+                        <b>@model.EventDate.ToShortTimeString()</b>
+                    </MudText>
+                </MudStack>
+
+                <MudText Typo="Typo.body1" Class="mt-4">
+                    <b>Description</b>
+                </MudText>
+                <MudText Typo="Typo.body1">
+                    @model.Description
+                </MudText>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h5">
+                Reviews
+            </MudText>
+
+            @if(model.Reviews == null || model.Reviews.Any(c => c.UserId == currentUserId) is false)
+            {
+                <MudExpansionPanels Elevation="0" Class="my-4">
+                    <MudExpansionPanel IsExpandedChanged="ReviewDialogExpanded">
+                        <TitleContent>
+                            <div class="d-flex">
+                                <MudIcon Icon="@Icons.Material.Filled.StarRate" class="mr-3"></MudIcon>
+                                <MudText>Write a <strong>review</strong></MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                                <MudRating @bind-SelectedValue="review.Rating" Size="Size.Medium" />
+                                <MudTextField Label="Comment" @bind-Value="review.Comment" Required="true" Variant="Variant.Outlined" />
+                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@AddReview">
+                                    Add review
+                                </MudButton>
+                            </MudStack>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            }
+
+            <MudStack>
+                @if (model.Reviews != null && model.Reviews.Any())
+                {
+                    foreach (var review in model.Reviews)
+                    {
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0" Class="mx-4">
+                            <MudRating SelectedValue="review.Rating" ReadOnly="true" Size="Size.Medium" />
+                            <span>
+                                @review.Comment - @review.Timestamp.ToShortDateString()
+                                @if(review.UserId == currentUserId)
+                                {
+                                    <b class="ml-4">(your review)</b>
+                                    <MudIconButton OnClick="@(() => DeleteReview(review.ReviewId))" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                }
+                            </span>
+                        </MudStack>
+                    }
+                }
+                else
+                {
+                    <span>
+                        <b>
+                            No reviews yet.
+                        </b>
+                    </span>
+                }
+            </MudStack>
+        </MudPaper>
+
+    </MudItem>
+</MudGrid>

@@ -15,7 +15,8 @@ builder.Services.AddHttpClient(Constants.Api, client => client.BaseAddress = new
 builder.Services.AddHttpClient(Constants.PublicApi, client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Event.Net.ServerAPI"));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(Constants.Api));
+builder.Services.AddScoped<UserProvider>();
 
 builder.Services.AddApiAuthorization();
 
