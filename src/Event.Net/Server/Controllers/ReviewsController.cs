@@ -4,6 +4,8 @@ using Event.Net.Server.Data;
 using AutoMapper;
 using Event.Net.Shared;
 using Event.Net.Server.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Event.Net.Server.Controllers
 {
@@ -42,6 +44,7 @@ namespace Event.Net.Server.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutReview(int id, ReviewDto reviewDto)
         {
             var review = _mapper.Map<Review>(reviewDto);
@@ -73,9 +76,11 @@ namespace Event.Net.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ReviewDto>> PostReview(ReviewDto reviewDto)
         {
             var review = _mapper.Map<Review>(reviewDto);
+            review.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
@@ -83,6 +88,7 @@ namespace Event.Net.Server.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteReview(int id)
         {
             var review = await _context.Reviews.FindAsync(id);

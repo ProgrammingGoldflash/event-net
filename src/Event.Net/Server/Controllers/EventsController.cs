@@ -31,27 +31,27 @@ namespace Event.Net.Server.Controllers
                 return NotFound();
             }
 
-            var entities = await _context.Events.AsNoTracking().ToListAsync();
+            var entities = await _context.Events.Include(c => c.Reviews).AsNoTracking().ToListAsync();
 
             return Ok(_mapper.Map<IEnumerable<EventDto>>(entities));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventDto>> GetEvent(int id)
+        public async Task<ActionResult<EventDetailsDto>> GetEvent(int id)
         {
             if (_context.Events == null)
             {
                 return NotFound();
             }
 
-            var @event = await _context.Events.FindAsync(id);
+            var @event = await _context.Events.Include(c => c.Reviews).FirstOrDefaultAsync(e => e.Id == id);
 
             if (@event == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<EventDto>(@event));
+            return Ok(_mapper.Map<EventDetailsDto>(@event));
         }
 
         [HttpPut("{id}")]
